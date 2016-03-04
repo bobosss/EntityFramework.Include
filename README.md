@@ -1,4 +1,7 @@
 # EntityFramework.Include
+
+EntityFramework version 6.1.3
+
 ##Usage
     //Required using EntityFramework.Include.Extensions
     
