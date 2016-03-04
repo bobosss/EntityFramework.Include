@@ -10,27 +10,27 @@ namespace EntityFramework.Include.Extensions
     {
         public static IQueryable<T> Include<T, TProperty>(this IQueryable<T> queryable,
             string path,
-            Expression<Func<T, IEnumerable<TProperty>>> query)
+            Expression<Func<T, TProperty>> query)
         {
             ArgumentNull.Check(path, nameof(path));
             ArgumentNull.Check(query, nameof(query));
 
             var call = Expression.Call(null,
-                        new Func<IQueryable<T>, string, Expression<Func<T, IEnumerable<TProperty>>>,
+                        new Func<IQueryable<T>, string, Expression<Func<T, TProperty>>,
                         IQueryable<T>>(Include).Method, queryable.Expression, Expression.Constant(path), Expression.Constant(query));
             
             return CreateQuery(queryable, call);
         }
 
         public static IQueryable<T> Include<T, TProperty>(this IQueryable<T> queryable,
-            Expression<Func<T, IEnumerable<TProperty>>> propertySelector,
-            Expression<Func<T, IEnumerable<TProperty>>> query)
+            Expression<Func<T, TProperty>> propertySelector,
+            Expression<Func<T, TProperty>> query)
         {
             ArgumentNull.Check(propertySelector, nameof(propertySelector));
             ArgumentNull.Check(query, nameof(query));
 
             var call = Expression.Call(null,
-                        new Func<IQueryable<T>, Expression<Func<T, IEnumerable<TProperty>>>, Expression<Func<T, IEnumerable<TProperty>>>,
+                        new Func<IQueryable<T>, Expression<Func<T, TProperty>>, Expression<Func<T, TProperty>>,
                         IQueryable<T>>(Include).Method, queryable.Expression, Expression.Constant(propertySelector), Expression.Constant(query));
 
             return CreateQuery(queryable, call);

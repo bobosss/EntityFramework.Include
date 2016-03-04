@@ -13,7 +13,7 @@ namespace EntityFramework.Include.Internal
     {
         private ReplaceIncludeVisitor<T> Visitor { get; } = new ReplaceIncludeVisitor<T>();
 
-        private Type DynamicType { get; } = DynamicTypeProvider.Provide<T>();
+        private Type DynamicType => DynamicTypeProvider.Provide<T>();
         
         private IQueryable<T> ReplacedQueryable { get; }
 
