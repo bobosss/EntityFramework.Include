@@ -8,7 +8,8 @@ namespace EntityFramework.Include.Internal.Expressions
 {
     internal class ExpressionBuilder
     {
-        internal static Expression<Func<object, object>> Shift(Type source, Type result)
+
+        internal Expression<Func<object, object>> Shift(Type source, Type result)
         {
             var param = Expression.Parameter(typeof(object));
             var init = MakeMemberInit(source, result, param);
@@ -16,7 +17,7 @@ namespace EntityFramework.Include.Internal.Expressions
             return Expression.Lambda<Func<object, object>>(init, param);
         }
 
-        internal static Expression<Func<TSource, object>> ShiftWith<TSource>(Type result, IEnumerable<Tuple<MemberExpression, Expression>> accessorPairs)
+        internal Expression<Func<TSource, object>> ShiftWith<TSource>(Type result, IEnumerable<Tuple<MemberExpression, Expression>> accessorPairs)
         {
             var source = typeof(TSource);
             var param = Expression.Parameter(source);
@@ -27,7 +28,7 @@ namespace EntityFramework.Include.Internal.Expressions
             return Expression.Lambda<Func<TSource, object>>(init, param);
         }
 
-        private static MemberInitExpression MakeMemberInit(Type source, Type result, ParameterExpression param, 
+        private MemberInitExpression MakeMemberInit(Type source, Type result, ParameterExpression param, 
             Dictionary<string, Tuple<MemberExpression, Expression>> accessorDic = null)
         {
             if (accessorDic == null)
@@ -57,7 +58,7 @@ namespace EntityFramework.Include.Internal.Expressions
             return Expression.MemberInit(cotr, bind);
         }
 
-        private static Expression MakeConvert(Expression source, Type resultType)
+        private Expression MakeConvert(Expression source, Type resultType)
         {
             return Expression.Convert(source, resultType);
         }
