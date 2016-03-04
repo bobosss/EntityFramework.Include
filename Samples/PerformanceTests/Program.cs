@@ -21,8 +21,9 @@ namespace PerformanceTests
                 for (int i = 0; i < trial; i++)
                 {
                     var list =
-                        context.Parents.Include(_ => _.Sons, _ => _.Sons.Where(__ => __.Age > 10).ToList())
+                        context.Parents.Include(_ => _.Sons, _ => _.Sons.Take(10).ToList())
                             .Include(_ => _.Daughters, _ => _.Daughters.Where(__ => __.Age > 10).ToList())
+                            .Include(_ => _.SonCount, _ => _.Sons.Count)
                             .ToListWithInclude();
                 }
                 watch.Stop();
@@ -38,6 +39,7 @@ namespace PerformanceTests
                                 {
                                     Id = _.Id,
                                     Age = _.Age,
+                                    SonCount = _.Sons.Count(),
                                     Sons = _.Sons.Where(__ => __.Age > 10).ToList(),
                                     Daughters = _.Daughters.Where(__ => __.Age > 10).ToList()
                                 }).ToList()

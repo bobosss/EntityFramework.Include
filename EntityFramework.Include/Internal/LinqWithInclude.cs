@@ -93,7 +93,7 @@ namespace EntityFramework.Include.Internal
 
         private bool ShouldShift()
         {
-            return Visitor.QueryableTypeAtFirst == typeof (IQueryable<T>);
+            return Visitor.QueryableTypeAtFirst.GenericTypeArguments[0] == typeof (T);
         }
 
         private IQueryable<object> AddShiftDynamicTypeAtTail(IQueryable<T> queryable)
