@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Transactions;
-using EntityFramework.BulkInsert.Extensions;
 using EntityFramework.Include.Extensions;
 using PerformanceTests.TestDomain;
 
