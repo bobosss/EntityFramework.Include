@@ -52,6 +52,7 @@
     <Compile Include="Extensions\IncludeExtension.cs" />
     <Compile Include="Extensions\LinqExtension.cs" />
     <Compile Include="Internal\CacheableProvider.cs" />
+    <Compile Include="Internal\DbContextHelper.cs" />
     <Compile Include="Internal\DynamicTypeBuilder.cs" />
     <Compile Include="Internal\DynamicTypeProvider.cs" />
     <Compile Include="Internal\Expressions\ExpressionHelper.cs" />
