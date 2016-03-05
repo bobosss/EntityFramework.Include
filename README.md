@@ -2,7 +2,14 @@
 
 A library that extends Include of Entity Framework to provide filtering navigation property.
 
--EntityFramework version 6.1.3-
+Required EntityFramework version is 6.1.3.
+
+##Download
+EntityFramework.Include is available on nuget.org -> [EntityFramework.Include](https://www.nuget.org/packages/EntityFramework.Include/)
+
+To install EntityFramework.Include, run the following command in Package Manager Console.
+
+    PM> Install-Package EntityFramework.Include
 
 ##Usage
     //Required using EntityFramework.Include.Extensions
