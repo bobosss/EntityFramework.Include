@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -8,6 +9,15 @@ namespace EntityFramework.Include.Internal.Expressions
 {
     internal class ExpressionBuilder
     {
+
+        private DbContext Context { get; }
+
+        internal ExpressionBuilder() { }
+
+        internal ExpressionBuilder(DbContext context)
+        {
+            Context = context;
+        }
 
         internal Expression<Func<object, object>> Shift(Type source, Type result)
         {
@@ -28,16 +38,18 @@ namespace EntityFramework.Include.Internal.Expressions
             return Expression.Lambda<Func<TSource, object>>(init, param);
         }
 
-        private MemberInitExpression MakeMemberInit(Type source, Type result, ParameterExpression param, 
+        private MemberInitExpression MakeMemberInit(Type source, Type result, ParameterExpression param,
             Dictionary<string, Tuple<MemberExpression, Expression>> accessorDic = null)
         {
             if (accessorDic == null)
             {
                 accessorDic = new Dictionary<string, Tuple<MemberExpression, Expression>>();
             }
-            
+
             var visiter = new ParameterVisitor(param);
-            
+            var ins = Activator.CreateInstance(source);
+            var entry = Context?.Entry(ins);
+
             var cotr = Expression.New(result);
             var bind = source.GetProperties(BindingFlags.Public | BindingFlags.Instance)
                 .Select(_ =>
@@ -51,9 +63,21 @@ namespace EntityFramework.Include.Internal.Expressions
                         return Expression.Bind(accessor.Member, setter);
                     }
 
-                    return Expression.Bind(result.GetProperty(_.Name),
-                        visiter.Visit(Expression.MakeMemberAccess(MakeConvert(param, source), _)));
-                });
+                    if (entry == null)
+                    {
+                        return Expression.Bind(result.GetProperty(_.Name),
+                            visiter.Visit(Expression.MakeMemberAccess(MakeConvert(param, source), _)));
+                    }
+
+                    if (_.PropertyType.IsPrimitive || entry.ComplexProperty(_.Name) != null)
+                    {
+                        return Expression.Bind(result.GetProperty(_.Name),
+                            visiter.Visit(Expression.MakeMemberAccess(MakeConvert(param, source), _)));
+                    }
+
+                    return null;
+                })
+                .Where(_ => _ != null);
 
             return Expression.MemberInit(cotr, bind);
         }

@@ -22,7 +22,7 @@ namespace EntityFramework.Include.Internal
         internal LinqWithInclude(IQueryable<T> queryable)
         {
             ReplacedQueryable = queryable.Provider.CreateQuery<T>(Visitor.Replace(queryable.Expression));
-            Builder = new ExpressionBuilder();
+            Builder = new ExpressionBuilder(DbContextHelper.GetDbContext(queryable.Provider));
         }
 
         internal List<T> ToList()
