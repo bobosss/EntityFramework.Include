@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+    <metadata>
+        <id>EntityFramework.Include</id>
+        <version>0.1.1</version>
+        <title>EntityFramework.Include</title>
+        <authors>deyunote</authors>
+        <owners>deyu</owners>
+        <licenseUrl>https://github.com/deyunote/EntityFramework.Include/blob/master/LICENSE</licenseUrl>
+        <projectUrl>https://github.com/deyunote/EntityFramework.Include</projectUrl>
+        <requireLicenseAcceptance>true</requireLicenseAcceptance>
+        <description>A library that extends Include of Entity Framework to provide filtering navigation property.</description>
+        <copyright>Copyright© 2014 - 2016 deyu, All rights reserved.</copyright>
+        <tags>EntityFramework,Include</tags>
+        <dependencies>
+            <dependency id="EntityFramework" version="6.1.3" />
+        </dependencies>
+    </metadata>
+    <files>
+        <file src="..\EntityFramework.Include\bin\Release\EntityFramework.Include.dll" target="lib\net45\EntityFramework.Include.dll" />
+    </files>
+</package>
