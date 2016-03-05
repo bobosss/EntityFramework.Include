@@ -1,6 +1,8 @@
 # EntityFramework.Include
 
-EntityFramework version 6.1.3
+A library that extends Include of Entity Framework to provide filtering navigation property.
+
+-EntityFramework version 6.1.3-
 
 ##Usage
     //Required using EntityFramework.Include.Extensions
