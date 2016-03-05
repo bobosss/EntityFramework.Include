@@ -17,10 +17,12 @@ namespace EntityFramework.Include.Internal
         
         private IQueryable<T> ReplacedQueryable { get; }
 
+        private ExpressionBuilder Builder { get; }
 
         internal LinqWithInclude(IQueryable<T> queryable)
         {
             ReplacedQueryable = queryable.Provider.CreateQuery<T>(Visitor.Replace(queryable.Expression));
+            Builder = new ExpressionBuilder(DbContextHelper.GetDbContext(queryable.Provider));
         }
 
         internal List<T> ToList()
@@ -99,7 +101,7 @@ namespace EntityFramework.Include.Internal
         private IQueryable<object> AddShiftDynamicTypeAtTail(IQueryable<T> queryable)
         {
             var accessorPair = GetPropertyAccessorPairs();
-            var shiftWith = ExpressionBuilder.ShiftWith<T>(DynamicType, accessorPair);
+            var shiftWith = Builder.ShiftWith<T>(DynamicType, accessorPair);
 
             return queryable.Select(shiftWith);
         } 

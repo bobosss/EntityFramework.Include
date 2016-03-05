@@ -13,7 +13,7 @@ namespace EntityFramework.Include.Internal
                 return FromCache(tuple);
             }
 
-            var f = ExpressionBuilder.Shift(source, result).Compile();
+            var f = new ExpressionBuilder().Shift(source, result).Compile();
             AddCache(tuple, f);
 
             return f;
