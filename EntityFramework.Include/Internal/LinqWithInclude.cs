@@ -19,10 +19,13 @@ namespace EntityFramework.Include.Internal
 
         private ExpressionBuilder Builder { get; }
 
+        private DbContext Context { get; }
+
         internal LinqWithInclude(IQueryable<T> queryable)
         {
             ReplacedQueryable = queryable.Provider.CreateQuery<T>(Visitor.Replace(queryable.Expression));
-            Builder = new ExpressionBuilder(DbContextHelper.GetDbContext(queryable.Provider));
+            Context = DbContextHelper.GetDbContext(queryable.Provider);
+            Builder = new ExpressionBuilder(Context);
         }
 
         internal List<T> ToList()
