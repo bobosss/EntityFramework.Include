@@ -12,6 +12,7 @@ To install EntityFramework.Include, run the following command in Package Manager
     PM> Install-Package EntityFramework.Include
 
 ##Usage
+```c#
     //Required using EntityFramework.Include.Extensions
     
     //Example Entity...
@@ -41,9 +42,9 @@ To install EntityFramework.Include, run the following command in Package Manager
     
     Console.WriteLine(list.First().Children.Count); //10
     Console.WriteLine(list.First().ChildrenCount); //output all Children count
-
+```
 To retrieve as List or T[], use `ToListWithInclude/Aysnc` or `ToArrayWithInclude/Aysnc`
-    
+```c#
     var list = context.ParentSet.Include(p => p.Children, p => p.Children.Take(10).ToList())
                                 .Include(p => P.ChildrenCount, p => p.Children.Count)
                                 .ToListWithInclude();
@@ -51,8 +52,9 @@ To retrieve as List or T[], use `ToListWithInclude/Aysnc` or `ToArrayWithInclude
     var array = context.ParentSet.Include(p => p.Children, p => p.Children.Take(10).ToList())
                                 .Include(p => P.ChildrenCount, p => p.Children.Count)
                                 .ToArrayWithInclude();
-                                
+```
 If include same property, the last include will be preferred
+```c#
 
     var list = context.ParentSet.Include(p => p.Children, p => p.Children.Take(10).ToList())
                                 .Include(p => p.Children, p => p.Children.Take(20).ToList()) //duplicate
@@ -60,3 +62,4 @@ If include same property, the last include will be preferred
                                 .ToListWithInclude();
                                 
     Console.WriteLine(list.First().Children.Count); //20
+```
