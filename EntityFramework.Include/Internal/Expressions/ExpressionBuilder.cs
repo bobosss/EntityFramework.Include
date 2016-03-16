@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
@@ -70,7 +71,7 @@ namespace EntityFramework.Include.Internal.Expressions
                             visiter.Visit(Expression.MakeMemberAccess(MakeConvert(param, source), _)));
                     }
 
-                    if (IsScalarProperty(entry, _.Name) || IsComplexProperty(entry, _.Name))
+                    if (InitializableProperty(entry, _))
                     {
                         return Expression.Bind(result.GetProperty(_.Name),
                             visiter.Visit(Expression.MakeMemberAccess(MakeConvert(param, source), _)));
@@ -87,12 +88,18 @@ namespace EntityFramework.Include.Internal.Expressions
         {
             return Expression.Convert(source, resultType);
         }
-        
+
+        private bool InitializableProperty(DbEntityEntry entry, PropertyInfo propertyInfo)
+        {
+            return !NotMappedProperty(propertyInfo) &&
+                   (IsComplexProperty(entry, propertyInfo.Name) || IsScalarProperty(entry, propertyInfo.Name));
+        }
+
         private bool IsScalarProperty(DbEntityEntry entry, string property)
         {
             try
             {
-                return entry?.Property(property) != null;
+                return entry.Property(property) != null;
             }
             catch (Exception)
             {
@@ -104,12 +111,17 @@ namespace EntityFramework.Include.Internal.Expressions
         {
             try
             {
-                return entry?.ComplexProperty(property) != null;
+                return entry.ComplexProperty(property) != null;
             }
             catch (Exception)
             {
                 return false;
             }
+        }
+
+        private bool NotMappedProperty(PropertyInfo propertyInfo)
+        {
+            return Attribute.IsDefined(propertyInfo, typeof(NotMappedAttribute));
         }
     }
 }
