@@ -4,6 +4,8 @@ using System.Collections.ObjectModel;
 using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using EntityFramework.Include.Internal.Expressions;
 
@@ -95,10 +97,15 @@ namespace EntityFramework.Include.Internal
 
             return Tuple.Create((MemberExpression)pBody, ((LambdaExpression)s).Body);
         }
-
+        
         private bool ShouldShift()
         {
-            return Visitor.QueryableTypeAtFirst?.GenericTypeArguments[0] == typeof (T);
+            //detect if anonymous type Ref:http://stackoverflow.com/questions/2483023/how-to-test-if-a-type-is-anonymous
+            var type = typeof(T);
+            return !(Attribute.IsDefined(type, typeof(CompilerGeneratedAttribute), false)
+                && type.IsGenericType && type.Name.Contains("AnonymousType")
+                && (type.Name.StartsWith("<>") || type.Name.StartsWith("VB$"))
+                && (type.Attributes & TypeAttributes.NotPublic) == TypeAttributes.NotPublic);
         }
 
         private IQueryable<object> AddShiftDynamicTypeAtTail(IQueryable<T> queryable)

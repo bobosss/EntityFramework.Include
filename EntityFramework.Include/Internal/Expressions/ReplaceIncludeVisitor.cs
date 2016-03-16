@@ -17,8 +17,6 @@ namespace EntityFramework.Include.Internal.Expressions
 
         internal IReadOnlyList<MethodCallExpression> IncludeExpressions => Expressions;
 
-        internal Type QueryableTypeAtFirst { get; private set; }
-
         internal Expression Replace(Expression expression)
         {
             return Visit(expression);
@@ -26,11 +24,6 @@ namespace EntityFramework.Include.Internal.Expressions
 
         protected override Expression VisitMethodCall(MethodCallExpression node)
         {
-            if (node.Type.IsGenericType && node.Type.GetGenericTypeDefinition() == typeof(IQueryable<>))
-            {
-                QueryableTypeAtFirst = node.Type;
-            }
-
             if (node.Method.DeclaringType == DeclaringType && node.Method.Name == MethodName)
             {
                 if (node.Type == typeof (IQueryable<TResult>))
