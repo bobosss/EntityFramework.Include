@@ -70,7 +70,7 @@ namespace EntityFramework.Include.Internal.Expressions
                             visiter.Visit(Expression.MakeMemberAccess(MakeConvert(param, source), _)));
                     }
 
-                    if (_.PropertyType.IsPrimitive || IsComplexProperty(entry, _.Name))
+                    if (IsScalarProperty(entry, _.Name) || IsComplexProperty(entry, _.Name))
                     {
                         return Expression.Bind(result.GetProperty(_.Name),
                             visiter.Visit(Expression.MakeMemberAccess(MakeConvert(param, source), _)));
@@ -86,6 +86,18 @@ namespace EntityFramework.Include.Internal.Expressions
         private Expression MakeConvert(Expression source, Type resultType)
         {
             return Expression.Convert(source, resultType);
+        }
+        
+        private bool IsScalarProperty(DbEntityEntry entry, string property)
+        {
+            try
+            {
+                return entry?.Property(property) != null;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
         private bool IsComplexProperty(DbEntityEntry entry, string property)
