@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -69,7 +70,7 @@ namespace EntityFramework.Include.Internal.Expressions
                             visiter.Visit(Expression.MakeMemberAccess(MakeConvert(param, source), _)));
                     }
 
-                    if (_.PropertyType.IsPrimitive || entry.ComplexProperty(_.Name) != null)
+                    if (_.PropertyType.IsPrimitive || IsComplexProperty(entry, _.Name))
                     {
                         return Expression.Bind(result.GetProperty(_.Name),
                             visiter.Visit(Expression.MakeMemberAccess(MakeConvert(param, source), _)));
@@ -85,6 +86,18 @@ namespace EntityFramework.Include.Internal.Expressions
         private Expression MakeConvert(Expression source, Type resultType)
         {
             return Expression.Convert(source, resultType);
+        }
+
+        private bool IsComplexProperty(DbEntityEntry entry, string property)
+        {
+            try
+            {
+                return entry?.ComplexProperty(property) != null;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
     }
 }
