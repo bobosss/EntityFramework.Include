@@ -26,7 +26,11 @@ namespace EntityFramework.Include.Internal.Expressions
 
         protected override Expression VisitMethodCall(MethodCallExpression node)
         {
-            QueryableTypeAtFirst = node.Type;
+            if (node.Type.IsGenericType && node.Type.GetGenericTypeDefinition() == typeof(IQueryable<>))
+            {
+                QueryableTypeAtFirst = node.Type;
+            }
+
             if (node.Method.DeclaringType == DeclaringType && node.Method.Name == MethodName)
             {
                 if (node.Type == typeof (IQueryable<TResult>))
