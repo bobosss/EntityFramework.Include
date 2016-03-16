@@ -67,3 +67,17 @@ var list = context.ParentSet.Include(p => p.Children, p => p.Children.Take(10).T
                             
 Console.WriteLine(list.First().Children.Count); //20
 ```
+
+##Notice
+
+You can't use default `Include` of Entity Framework now.
+
+    var list = context.ParentSet.Include(p => p.Children) //Doesn't work now.
+                                .Include(p => P.ChildrenCount, p => p.Children.Count)
+                                .ToListWithInclude();
+
+So describe like this
+
+    var list = context.ParentSet.Include(p => p.Children, p => p.Children) //This works.
+                                .Include(p => P.ChildrenCount, p => p.Children.Count)
+                                .ToListWithInclude();
